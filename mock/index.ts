@@ -1,5 +1,3 @@
-import { makeExecutableSchema, addMockFunctionsToSchema } from 'graphql-tools';
-import { graphql } from 'graphql';
 import { ApolloServer, gql } from 'apollo-server';
 
 // Fill this in with the schema string
