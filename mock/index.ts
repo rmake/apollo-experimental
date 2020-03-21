@@ -1,8 +1,9 @@
 import { makeExecutableSchema, addMockFunctionsToSchema } from 'graphql-tools';
 import { graphql } from 'graphql';
+import { ApolloServer, gql } from 'apollo-server';
 
 // Fill this in with the schema string
-const schemaString = `
+const typeDefs = gql`
 type User {
   id: ID! # the ! means that every user object _must_ have an id
   firstName: String
@@ -40,23 +41,9 @@ schema {
 }
 `;
 
-// Make a GraphQL schema with no resolvers
-const schema = makeExecutableSchema({ typeDefs: schemaString });
 
-// Add mocks, modifies schema in place
-addMockFunctionsToSchema({ schema });
+const server = new ApolloServer({ typeDefs, mocks: true });
 
-const query = `
-query tasksForUser {
-  posts {
-    id
-    title
-    user {
-      id
-    }
-    votes
-  }
-}
-`;
-
-graphql(schema, query).then((result) => console.log('Got result', result));
+server.listen().then(({ url }) => {
+  console.log(`server ready ad ${url}`);
+});
