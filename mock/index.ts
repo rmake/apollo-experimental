@@ -3,32 +3,34 @@ import { ApolloServer, gql } from 'apollo-server';
 // Fill this in with the schema string
 const typeDefs = gql`
 type User {
-  id: ID! # the ! means that every user object _must_ have an id
-  firstName: String
-  lastName: String
-  """
-  the list of Posts by this user
-  """
-  posts: [Post]
+  id: String
+  photos: [Photo]
+  friends: [Friendship]
 }
 
-type Post {
-  id: ID!
-  title: String
-  user: User
-  votes: Int
+type Photo {
+  id: String!
+  postedBy: User!
+  taggedUser: [User]
+}
+
+type Friendship {
+  friends: [User]
+  connectedAt: Int
+}
+
+type CreateUserResponse {
+  user: User!
 }
 
 # the schema allows the following query:
 type Query {
-  posts: [Post]
+  users: [User]
 }
 
 # this schema allows the following mutation:
 type Mutation {
-  upvotePost (
-    postId: ID!
-  ): Post
+  createUser: CreateUserResponse
 }
 
 # we need to tell the server which types represent the root query
