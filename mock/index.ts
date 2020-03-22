@@ -19,6 +19,19 @@ type Friendship {
   connectedAt: Int
 }
 
+union AgendaItem = StudyGroup | Workout
+
+type StudyGroup {
+  name: String
+  subject: String
+  students: [User]
+}
+
+type Workout {
+  name: String
+  reps: Int
+}
+
 type CreateUserResponse {
   user: User!
 }
@@ -26,6 +39,7 @@ type CreateUserResponse {
 # the schema allows the following query:
 type Query {
   users: [User]
+  agendas: [AgendaItem]
 }
 
 # this schema allows the following mutation:
