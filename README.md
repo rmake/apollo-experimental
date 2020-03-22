@@ -162,11 +162,6 @@ query schedule {
       subject
       students {
         id
-        friends {
-          friends {
-            id
-          }
-        }
       }
     }
   }
@@ -183,62 +178,73 @@ response
         "subject": "Hello World",
         "students": [
           {
-            "id": "Hello World",
-            "friends": [
-              {
-                "friends": [
-                  {
-                    "id": "Hello World"
-                  },
-                  {
-                    "id": "Hello World"
-                  }
-                ]
-              },
-              {
-                "friends": [
-                  {
-                    "id": "Hello World"
-                  },
-                  {
-                    "id": "Hello World"
-                  }
-                ]
-              }
-            ]
+            "id": "Hello World"
           },
           {
-            "id": "Hello World",
-            "friends": [
-              {
-                "friends": [
-                  {
-                    "id": "Hello World"
-                  },
-                  {
-                    "id": "Hello World"
-                  }
-                ]
-              },
-              {
-                "friends": [
-                  {
-                    "id": "Hello World"
-                  },
-                  {
-                    "id": "Hello World"
-                  }
-                ]
-              }
-            ]
+            "id": "Hello World"
           }
         ]
       },
       {
         "name": "Hello World",
-        "reps": 2
+        "reps": 48
       }
     ]
   }
 }
+```
+
+### interface
+
+query
+
+```
+query {
+  agendas2 {
+    name
+    start
+    end
+    ...on StudyGroup2 {
+      participents {
+      	id
+    	}
+      topic
+    }
+    ...on Workout2 {
+      reps
+    }
+  }
+}
+```
+
+response
+
+```
+{
+  "data": {
+    "agendas2": [
+      {
+        "name": "Hello World",
+        "start": -14,
+        "end": -71,
+        "participents": [
+          {
+            "id": "Hello World"
+          },
+          {
+            "id": "Hello World"
+          }
+        ],
+        "topic": "Hello World"
+      },
+      {
+        "name": "Hello World",
+        "start": 44,
+        "end": -6,
+        "reps": -20
+      }
+    ]
+  }
+}
+
 ```

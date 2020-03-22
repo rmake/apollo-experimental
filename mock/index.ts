@@ -32,6 +32,27 @@ type Workout {
   reps: Int
 }
 
+interface AgendaItem2 {
+  name: String
+  start: Int
+  end: Int
+}
+
+type StudyGroup2 implements AgendaItem2 {
+  name: String
+  start: Int
+  end: Int
+  participents: [User]
+  topic: String
+}
+
+type Workout2 implements AgendaItem2 {
+  name: String
+  start: Int
+  end: Int
+  reps: Int
+}
+
 type CreateUserResponse {
   user: User!
 }
@@ -40,6 +61,7 @@ type CreateUserResponse {
 type Query {
   users: [User]
   agendas: [AgendaItem]
+  agendas2: [AgendaItem2]
 }
 
 # this schema allows the following mutation:
