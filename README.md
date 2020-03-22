@@ -197,7 +197,6 @@ response
 ### interface
 
 query
-
 ```
 query {
   agendas2 {
@@ -218,7 +217,6 @@ query {
 ```
 
 response
-
 ```
 {
   "data": {
@@ -246,5 +244,4 @@ response
     ]
   }
 }
-
 ```

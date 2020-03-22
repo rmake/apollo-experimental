@@ -60,6 +60,7 @@ type CreateUserResponse {
 # the schema allows the following query:
 type Query {
   users: [User]
+  photos: [Photo]
   agendas: [AgendaItem]
   agendas2: [AgendaItem2]
 }
