@@ -1,8 +1,11 @@
 {
   "name": "apollo-server-experimental",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "index.ts",
   "license": "MIT",
+  "scripts": {
+    "start": "ts-node-dev index.ts"
+  },
   "dependencies": {
     "apollo-server": "^2.11.0",
     "graphql": "^14.6.0",
