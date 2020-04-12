@@ -2,5 +2,11 @@
   "name": "apollo-experimental-client-gen",
   "version": "1.0.0",
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "graphql": "^15.0.0"
+  },
+  "devDependencies": {
+    "@graphql-codegen/cli": "^1.13.2"
+  }
 }
