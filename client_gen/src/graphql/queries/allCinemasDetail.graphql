@@ -1,0 +1,15 @@
+query allCinemaDetails($before: String, $after: String) {
+  allCinemaDetails(before:$before, after:$after) {
+    edges {
+      node {
+        id
+        createdDate
+        updatedDate
+        slug
+        hallName
+        numberOfSeats
+        technology
+      }
+    }
+  }
+}
