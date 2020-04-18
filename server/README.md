@@ -14,8 +14,10 @@ mutation newPhoto {
 }
 ```
 
+### variable mutation
+
 ```
-mutation newPhoto($name: $String!, $description: String) {
+mutation newPhoto($name: String!, $description: String) {
   postPhoto(name: $name, description: $description)
 }
 ```
@@ -24,5 +26,28 @@ mutation newPhoto($name: $String!, $description: String) {
 {
 	"name": "name a",
   "description": "description a"   
+}
+```
+
+### type resolver
+
+```
+mutation newPhoto($name: String!, $description: String) {
+  postPhoto(name: $name, description: $description) {
+    id
+    name
+    description
+  }
+}
+```
+
+```
+query listPhotos {
+  allPhotos {
+    id
+    name
+    description
+    url
+  }
 }
 ```
