@@ -22,7 +22,7 @@ mutation newPhoto($name: String!, $description: String) {
 }
 ```
 
-```
+```json
 {
 	"name": "name a",
   "description": "description a"   
@@ -48,6 +48,29 @@ query listPhotos {
     name
     description
     url
+  }
+}
+```
+
+### input type
+
+```
+mutation newPhoto($input: PostPhotoInput!) {
+  postPhoto(input: $input) {
+    id
+    name
+    url
+    description
+    category
+  }
+}
+```
+
+```json
+{
+  "input": {
+    "name": "sample photo",
+    "description": "A sample photo for examples."
   }
 }
 ```

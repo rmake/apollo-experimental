@@ -1,11 +1,20 @@
 import { ApolloServer, gql } from 'apollo-server';
 
 const typeDefs = gql`
+  enum PhotoCategory {
+    SELFIE
+    PORTRAIT
+    ACTION
+    LANDSCAPE
+    GRAPHIC
+  }
+
   type Photo {
     id: ID!
     url: String!
     name: String!
     description: String
+    category: PhotoCategory!
   }
 
   type Query {
@@ -13,8 +22,14 @@ const typeDefs = gql`
     allPhotos: [Photo!]!
   }
 
+  input PostPhotoInput {
+    name: String!
+    category: PhotoCategory=PORTRAIT
+    description: String
+  }
+
   type Mutation {
-    postPhoto(name: String!, description: String): Photo!
+    postPhoto(input: PostPhotoInput): Photo!
   }
 
   schema {
@@ -35,10 +50,9 @@ const resolvers = {
     postPhoto: (parent, args) => {
       const newPhoto = {
         id: _id++,
-        ...args,
+        ...args.input,
       };
       photos.push(newPhoto);
-
       return newPhoto;
     }
   },
