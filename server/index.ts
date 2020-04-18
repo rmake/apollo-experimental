@@ -5,14 +5,27 @@ const typeDefs = gql`
     totalPhotos: Int!
   }
 
+  type Mutation {
+    postPhoto(name: String!, description: String): Boolean!
+  }
+
   schema {
     query: Query
+    mutation: Mutation
   }
 `;
+
+const photos = [];
 
 const resolvers = {
   Query: {
     totalPhotos: () => 42,
+  },
+  Mutation: {
+    postPhoto: (parent, args) => {
+      photos.push(args);
+      return true;
+    }
   }
 };
 
