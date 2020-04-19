@@ -37,6 +37,11 @@ export const typeDefs = gql`
     allUsers: [User!]!
   }
 
+  type AuthPayload {
+    token: String
+    user: User!
+  }
+
   input PostPhotoInput {
     name: String!
     category: PhotoCategory = PORTRAIT
@@ -45,6 +50,7 @@ export const typeDefs = gql`
 
   type Mutation {
     postPhoto(input: PostPhotoInput): Photo!
+    githubAuth(code: String!): AuthPayload
   }
 
   schema {

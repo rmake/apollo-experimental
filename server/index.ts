@@ -3,6 +3,7 @@ import { GraphQLScalarType, Kind } from "graphql";
 import expressPlayground from 'graphql-playground-middleware-express';
 import { typeDefs } from './typeDefs';
 import { MongoClient } from 'mongodb';
+import { githubAuth } from './github';
 const express = require('express');
 const dotenv = require('dotenv');
 dotenv.config();
@@ -66,6 +67,7 @@ const resolvers = {
       photos.push(newPhoto);
       return newPhoto;
     },
+    githubAuth,
   },
   Photo: {
     url: (parent) => `http://example.com/image/${parent.id}.jpg`,

@@ -222,3 +222,41 @@ query listPhotos {
 ## github authorization
 
 ### Github 認可
+
+### experimental
+
+```
+https://github.com/login/oauth/authorize?client_id=YOUR-ID-HERE&scope=user
+```
+
+```
+http://locahost:3000/?code=XYZ
+```
+
+```
+mutation {
+  githubAuth(code: "XYZ") {
+    token
+    user {
+      githubLogin
+      name
+      avatar
+    }
+  }
+}
+```
+
+```
+{
+  "data": {
+    "githubAuth": {
+      "token": "ABC",
+      "user": {
+        "githubLogin": "dycoon",
+        "name": "dycoon",
+        "avatar": "https://avatars3.githubusercontent.com/u/553189?v=4"
+      }
+    }
+  }
+}
+```
