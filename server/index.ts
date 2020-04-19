@@ -48,8 +48,14 @@ const tags = [
 
 const resolvers = {
   Query: {
-    totalPhotos: () => photos.length,
-    allPhotos: (parent, args) => photos.filter(photo => (!args.after || new Date(args.after).getTime() < new Date(photo.createdAt).getTime())),
+    totalPhotos: (parent, args, { db }) =>
+      db.collection('photos').estimatedDocumentCount(),
+    allPhotos: (parent, args, { db }) =>
+      db.collection('photos').find().toArray(),
+    totalUsers: (parent, args, { db }) =>
+      db.collection('users').estimatedDocumentCount(),
+    allUsers: (parent, args, { db }) =>
+      db.collection('users').find().toArray(),
   },
   Mutation: {
     postPhoto: (parent, args) => {
@@ -97,11 +103,11 @@ const start = async () => {
   const app = express();
 
   const MONGO_DB = process.env.DB_HOST;
-  const client = await MongoClient(
+  const client = await MongoClient.connect(
     MONGO_DB,
-    { userNewUrlParser: true },
+    { useNewUrlParser: true },
   );
-  const db = client.db;
+  const db = client.db();
   const context = { db };
 
   const server = new ApolloServer({

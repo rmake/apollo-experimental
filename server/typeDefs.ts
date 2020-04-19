@@ -33,6 +33,8 @@ export const typeDefs = gql`
   type Query {
     totalPhotos: Int!
     allPhotos(after: DateTime): [Photo!]!
+    totalUsers: Int!
+    allUsers: [User!]!
   }
 
   input PostPhotoInput {
