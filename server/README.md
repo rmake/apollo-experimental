@@ -74,3 +74,47 @@ mutation newPhoto($input: PostPhotoInput!) {
   }
 }
 ```
+
+### edge and connection
+
+```
+query photos {
+  allPhotos {
+    name
+    url
+    postedBy {
+      name
+    }
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "allPhotos": [
+      {
+        "name": "Dropping the Heart Chute",
+        "url": "http://example.com/image/1.jpg",
+        "postedBy": {
+          "name": "Glen Plake"
+        }
+      },
+      {
+        "name": "Enjoying the sunshine",
+        "url": "http://example.com/image/2.jpg",
+        "postedBy": {
+          "name": "Scot Schmidt"
+        }
+      },
+      {
+        "name": "Gunbarrel 25",
+        "url": "http://example.com/image/3.jpg",
+        "postedBy": {
+          "name": "Scot Schmidt"
+        }
+      }
+    ]
+  }
+}
+```
