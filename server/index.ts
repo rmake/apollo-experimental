@@ -1,5 +1,7 @@
-import { ApolloServer, gql } from "apollo-server";
+import { ApolloServer, gql } from "apollo-server-express";
 import { GraphQLScalarType, Kind } from "graphql";
+import expressPlayground from 'graphql-playground-middleware-express';
+const express = require('express');
 
 const typeDefs = gql`
   scalar DateTime
@@ -137,11 +139,18 @@ const resolvers = {
   }),
 };
 
+const app = express();
+
 const server = new ApolloServer({
   typeDefs,
   resolvers,
 });
 
-server
-  .listen()
-  .then(({ url }) => console.log(`GraphQL server running on ${url}`));
+server.applyMiddleware({ app });
+
+app.get('.', (request, response) => response.end("Welcome to the PhotoShare API"));
+app.get('/playground', expressPlayground({ endpoint: '/graphql' }))
+
+app.listen({ port: 4000 }, () =>
+  console.log(`GraqhQL Server running @ http://localhost:4000${server.graphqlPath}`)
+)
