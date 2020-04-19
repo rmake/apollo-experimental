@@ -1,5 +1,3 @@
-
-
 ## examples
 
 ```
@@ -24,8 +22,8 @@ mutation newPhoto($name: String!, $description: String) {
 
 ```json
 {
-	"name": "name a",
-  "description": "description a"   
+  "name": "name a",
+  "description": "description a"
 }
 ```
 
@@ -166,3 +164,61 @@ query listPhotos {
   }
 }
 ```
+
+## custom scalar
+
+```
+query listPhotos {
+  allPhotos {
+    name
+    createdAt
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "allPhotos": [
+      {
+        "name": "Dropping the Heart Chute",
+        "createdAt": "1977-03-27T15:00:00.000Z"
+      },
+      {
+        "name": "Enjoying the sunshine",
+        "createdAt": "1985-01-01T15:00:00.000Z"
+      },
+      {
+        "name": "Gunbarrel 25",
+        "createdAt": "2018-04-15T19:09:57.308Z"
+      }
+    ]
+  }
+}
+```
+
+```
+query listPhotos {
+  allPhotos(after: "2000/1/1") {
+    name
+    createdAt
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "allPhotos": [
+      {
+        "name": "Gunbarrel 25",
+        "createdAt": "2018-04-15T19:09:57.308Z"
+      }
+    ]
+  }
+}
+```
+
+## github authorization
+
+### Github 認可
