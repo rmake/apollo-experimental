@@ -75,7 +75,7 @@ mutation newPhoto($input: PostPhotoInput!) {
 }
 ```
 
-### edge and connection
+### edge and connection one-to-many
 
 ```
 query photos {
@@ -113,6 +113,54 @@ query photos {
         "postedBy": {
           "name": "Scot Schmidt"
         }
+      }
+    ]
+  }
+}
+```
+
+### edge and connection many-to-many
+
+```
+query listPhotos {
+  allPhotos {
+    url
+    taggedUsers {
+      name
+    }
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "allPhotos": [
+      {
+        "url": "http://example.com/image/1.jpg",
+        "taggedUsers": [
+          {
+            "name": "Glen Plake"
+          }
+        ]
+      },
+      {
+        "url": "http://example.com/image/2.jpg",
+        "taggedUsers": [
+          {
+            "name": "Scot Schmidt"
+          },
+          {
+            "name": "Mike Hattrup"
+          },
+          {
+            "name": "Glen Plake"
+          }
+        ]
+      },
+      {
+        "url": "http://example.com/image/3.jpg",
+        "taggedUsers": []
       }
     ]
   }
