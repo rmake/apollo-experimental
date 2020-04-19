@@ -2,7 +2,10 @@ import { ApolloServer } from "apollo-server-express";
 import { GraphQLScalarType, Kind } from "graphql";
 import expressPlayground from 'graphql-playground-middleware-express';
 import { typeDefs } from './typeDefs';
+import { MongoClient } from 'mongodb';
 const express = require('express');
+const dotenv = require('dotenv');
+dotenv.config();
 
 var _id = 3;
 var users = [
@@ -89,18 +92,32 @@ const resolvers = {
   }),
 };
 
-const app = express();
 
-const server = new ApolloServer({
-  typeDefs,
-  resolvers,
-});
+const start = async () => {
+  const app = express();
 
-server.applyMiddleware({ app });
+  const MONGO_DB = process.env.DB_HOST;
+  const client = await MongoClient(
+    MONGO_DB,
+    { userNewUrlParser: true },
+  );
+  const db = client.db;
+  const context = { db };
 
-app.get('.', (request, response) => response.end("Welcome to the PhotoShare API"));
-app.get('/playground', expressPlayground({ endpoint: '/graphql' }))
+  const server = new ApolloServer({
+    typeDefs,
+    resolvers,
+    context,
+  });
 
-app.listen({ port: 4000 }, () =>
-  console.log(`GraqhQL Server running @ http://localhost:4000${server.graphqlPath}`)
-)
+  server.applyMiddleware({ app });
+
+  app.get('.', (request, response) => response.end("Welcome to the PhotoShare API"));
+  app.get('/playground', expressPlayground({ endpoint: '/graphql' }))
+
+  app.listen({ port: 4000 }, () =>
+    console.log(`GraqhQL Server running @ http://localhost:4000${server.graphqlPath}`)
+  );
+}
+
+start();
