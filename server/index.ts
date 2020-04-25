@@ -72,8 +72,8 @@ const resolvers = {
         createdAt: new Date(),
       };
 
-      const { insertedIds } = await db.collection(`photos`).insert(newPhoto)
-      newPhoto.id = insertedIds[0];
+      const { id } = await db.collection(`photos`).insertOne(newPhoto)
+      newPhoto.id = id;
 
       return newPhoto;
     },
@@ -88,7 +88,7 @@ const resolvers = {
         githubToken: r.login.sha1,
       }));
 
-      await db.collection(`users`).insert(users);
+      await db.collection(`users`).insertMany(users);
 
       return users;
     },
@@ -144,7 +144,7 @@ const start = async () => {
   const MONGO_DB = process.env.DB_HOST;
   const client = await MongoClient.connect(
     MONGO_DB,
-    { useNewUrlParser: true },
+    { useNewUrlParser: true, useUnifiedTopology: true },
   );
   const db = client.db();
 
