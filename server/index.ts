@@ -91,7 +91,19 @@ const resolvers = {
       await db.collection(`users`).insert(users);
 
       return users;
-    }
+    },
+    fakeUserAuth: async (parent, { githubLogin }, { db }) => {
+      const user = await db.collection('users').findOne({ githubLogin });
+
+      if (!user) {
+        throw new Error(`Cannot find user with githubLogin '${githubLogin}'`)
+      }
+
+      return {
+        token: user.githubToken,
+        user,
+      }
+    },
   },
   Photo: {
     id: parent => parent.id || parent._id,

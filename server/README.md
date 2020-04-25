@@ -306,13 +306,22 @@ mutation post($input: PostPhotoInput!) {
 
 ```json
 {
+  "input": {
+    "name": "test name",
+    "description": "test description"
+  }
+}
+```
+
+```json
+{
   "data": {
     "postPhoto": {
-      "id": "5ea3dfed0952021caa5d01d5",
-      "url": "/img/photos/5ea3dfed0952021caa5d01d5.jpg",
+      "id": "5ea3e7af06c39921eea5e4c5",
+      "url": "/img/photos/5ea3e7af06c39921eea5e4c5.jpg",
       "postedBy": {
-        "name": "dycoon",
-        "avatar": "https://avatars3.githubusercontent.com/u/553189?v=4"
+        "name": "Bently Harris",
+        "avatar": "https://randomuser.me/api/portraits/thumb/men/14.jpg"
       }
     }
   }
@@ -356,6 +365,7 @@ query listPhotos {
 ```
 mutation {
   addFakeUsers(count: 3) {
+    githubLogin
     name
   }
 }
@@ -366,15 +376,36 @@ mutation {
   "data": {
     "addFakeUsers": [
       {
-        "name": "Rachel Dufour"
+        "githubLogin": "silverlion931",
+        "name": "Bently Harris"
       },
       {
-        "name": "Océane Arnaud"
+        "githubLogin": "brownrabbit193",
+        "name": "Kevin Welch"
       },
       {
-        "name": "Alicia Laurent"
+        "githubLogin": "orangepeacock973",
+        "name": "Beatriz Lefebvre"
       }
     ]
+  }
+}
+```
+
+```
+mutation {
+  fakeUserAuth(githubLogin: "silverlion931") {
+    token
+  }
+}
+```
+
+```
+{
+  "data": {
+    "fakeUserAuth": {
+      "token": "eed4d82a01613ad5a8e3c338fdb4a5ec8a8ca252"
+    }
   }
 }
 ```
