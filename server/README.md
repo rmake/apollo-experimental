@@ -223,10 +223,10 @@ query listPhotos {
 
 ### Github 認可
 
-### experimental
+### githubAuth mutation
 
 ```
-https://github.com/login/oauth/authorize?client_id=YOUR-ID-HERE&scope=user
+https://github.com/login/oauth/authorize?client_id=c0f9aa1dac9249801791&scope=user
 ```
 
 ```
@@ -246,7 +246,7 @@ mutation {
 }
 ```
 
-```
+```json
 {
   "data": {
     "githubAuth": {
@@ -257,6 +257,51 @@ mutation {
         "avatar": "https://avatars3.githubusercontent.com/u/553189?v=4"
       }
     }
+  }
+}
+```
+
+# ユーザーの認証
+
+```json
+{
+  "Authorization": "<YOUR_TOKEN>"
+}
+```
+
+```
+query currentUser {
+  me {
+    githubLogin
+    name
+    avatar
+  }
+}
+```
+
+```
+mutation post($input: PostPhotoInput!) {
+  postPhoto(input: $input) {
+    id
+    url
+    postedBy {
+      name
+      avatar
+    }
+  }
+}
+```
+
+```
+query listPhotos {
+  allPhotos {
+    name
+    postedBy {
+      githubLogin
+      name
+      avatar
+    }
+    createdAt
   }
 }
 ```

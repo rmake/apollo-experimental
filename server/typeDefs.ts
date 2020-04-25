@@ -35,6 +35,7 @@ export const typeDefs = gql`
     allPhotos(after: DateTime): [Photo!]!
     totalUsers: Int!
     allUsers: [User!]!
+    me: User
   }
 
   type AuthPayload {

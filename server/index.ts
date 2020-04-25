@@ -57,22 +57,32 @@ const resolvers = {
       db.collection('users').estimatedDocumentCount(),
     allUsers: (parent, args, { db }) =>
       db.collection('users').find().toArray(),
+    me: (parent, args, { currentUser }) => currentUser,
   },
   Mutation: {
-    postPhoto: (parent, args) => {
+    postPhoto: async (parent, args, { db, currentUser }) => {
+      if (!currentUser) {
+        throw new Error('only an authorized user can post a photo');
+      }
+
       const newPhoto = {
-        id: _id++,
         ...args.input,
+        userID: currentUser.githubLogin,
+        createdAt: new Date(),
       };
-      photos.push(newPhoto);
+
+      const { insertedIds } = await db.collection(`photos`).insert(newPhoto)
+      newPhoto.id = insertedIds[0];
+
       return newPhoto;
     },
     githubAuth,
   },
   Photo: {
-    url: (parent) => `http://example.com/image/${parent.id}.jpg`,
-    postedBy: (parent) =>
-      users.find((u) => u.githubLogin === parent.githubUser),
+    id: parent => parent.id || parent._id,
+    url: (parent) => `/img/photos/${parent._id}.jpg`,
+    postedBy: (parent, args, { db }) =>
+      db.collection('users').findOne({ githubLogin: parent.userID }),
     taggedUsers: (parent) =>
       tags
         .filter((tag) => tag.photoID === parent.id)
