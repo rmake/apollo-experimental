@@ -1,12 +1,12 @@
 import { ApolloServer } from "apollo-server-express";
 import { GraphQLScalarType, Kind } from "graphql";
-import expressPlayground from 'graphql-playground-middleware-express';
-import { typeDefs } from './typeDefs';
-import { MongoClient } from 'mongodb';
-import { githubAuth } from './github';
-import fetch from 'cross-fetch';
-const express = require('express');
-const dotenv = require('dotenv');
+import expressPlayground from "graphql-playground-middleware-express";
+import { typeDefs } from "./typeDefs";
+import { MongoClient } from "mongodb";
+import { githubAuth } from "./github";
+import fetch from "cross-fetch";
+const express = require("express");
+const dotenv = require("dotenv");
 dotenv.config();
 
 var _id = 3;
@@ -51,19 +51,18 @@ const tags = [
 const resolvers = {
   Query: {
     totalPhotos: (parent, args, { db }) =>
-      db.collection('photos').estimatedDocumentCount(),
+      db.collection("photos").estimatedDocumentCount(),
     allPhotos: (parent, args, { db }) =>
-      db.collection('photos').find().toArray(),
+      db.collection("photos").find().toArray(),
     totalUsers: (parent, args, { db }) =>
-      db.collection('users').estimatedDocumentCount(),
-    allUsers: (parent, args, { db }) =>
-      db.collection('users').find().toArray(),
+      db.collection("users").estimatedDocumentCount(),
+    allUsers: (parent, args, { db }) => db.collection("users").find().toArray(),
     me: (parent, args, { currentUser }) => currentUser,
   },
   Mutation: {
     postPhoto: async (parent, args, { db, currentUser }) => {
       if (!currentUser) {
-        throw new Error('only an authorized user can post a photo');
+        throw new Error("only an authorized user can post a photo");
       }
 
       const newPhoto = {
@@ -72,7 +71,7 @@ const resolvers = {
         createdAt: new Date(),
       };
 
-      const { id } = await db.collection(`photos`).insertOne(newPhoto)
+      const { id } = await db.collection(`photos`).insertOne(newPhoto);
       newPhoto.id = id;
 
       return newPhoto;
@@ -80,8 +79,8 @@ const resolvers = {
     githubAuth,
     addFakeUsers: async (parent, { count }, { db }) => {
       const randomUserApi = `https://randomuser.me/api/?results=${count}`;
-      const { results } = await fetch(randomUserApi).then(res => res.json());
-      const users = results.map(r => ({
+      const { results } = await fetch(randomUserApi).then((res) => res.json());
+      const users = results.map((r) => ({
         githubLogin: r.login.username,
         name: `${r.name.first} ${r.name.last}`,
         avatar: r.picture.thumbnail,
@@ -93,23 +92,23 @@ const resolvers = {
       return users;
     },
     fakeUserAuth: async (parent, { githubLogin }, { db }) => {
-      const user = await db.collection('users').findOne({ githubLogin });
+      const user = await db.collection("users").findOne({ githubLogin });
 
       if (!user) {
-        throw new Error(`Cannot find user with githubLogin '${githubLogin}'`)
+        throw new Error(`Cannot find user with githubLogin '${githubLogin}'`);
       }
 
       return {
         token: user.githubToken,
         user,
-      }
+      };
     },
   },
   Photo: {
-    id: parent => parent.id || parent._id,
+    id: (parent) => parent.id || parent._id,
     url: (parent) => `/img/photos/${parent._id}.jpg`,
     postedBy: (parent, args, { db }) =>
-      db.collection('users').findOne({ githubLogin: parent.userID }),
+      db.collection("users").findOne({ githubLogin: parent.userID }),
     taggedUsers: (parent) =>
       tags
         .filter((tag) => tag.photoID === parent.id)
@@ -137,15 +136,14 @@ const resolvers = {
   }),
 };
 
-
 const start = async () => {
   const app = express();
 
   const MONGO_DB = process.env.DB_HOST;
-  const client = await MongoClient.connect(
-    MONGO_DB,
-    { useNewUrlParser: true, useUnifiedTopology: true },
-  );
+  const client = await MongoClient.connect(MONGO_DB, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
   const db = client.db();
 
   const server = new ApolloServer({
@@ -153,19 +151,23 @@ const start = async () => {
     resolvers,
     context: async ({ req }) => {
       const githubToken = req.headers.authorization;
-      const currentUser = await db.collection('users').findOne({ githubToken })
-      return { db, currentUser }
+      const currentUser = await db.collection("users").findOne({ githubToken });
+      return { db, currentUser };
     },
   });
 
   server.applyMiddleware({ app });
 
-  app.get('.', (request, response) => response.end("Welcome to the PhotoShare API"));
-  app.get('/playground', expressPlayground({ endpoint: '/graphql' }))
+  app.get(".", (request, response) =>
+    response.end("Welcome to the PhotoShare API")
+  );
+  app.get("/playground", expressPlayground({ endpoint: "/graphql" }));
 
   app.listen({ port: 4000 }, () =>
-    console.log(`GraqhQL Server running @ http://localhost:4000${server.graphqlPath}`)
+    console.log(
+      `GraqhQL Server running @ http://localhost:4000${server.graphqlPath}`
+    )
   );
-}
+};
 
 start();
