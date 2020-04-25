@@ -52,6 +52,7 @@ export const typeDefs = gql`
   type Mutation {
     postPhoto(input: PostPhotoInput): Photo!
     githubAuth(code: String!): AuthPayload
+    addFakeUsers(count: Int = 1): [User!]!
   }
 
   schema {

@@ -261,7 +261,7 @@ mutation {
 }
 ```
 
-# ユーザーの認証
+### ユーザーの認証
 
 ```json
 {
@@ -279,6 +279,18 @@ query currentUser {
 }
 ```
 
+```json
+{
+  "data": {
+    "me": {
+      "githubLogin": "dycoon",
+      "name": "dycoon",
+      "avatar": "https://avatars3.githubusercontent.com/u/553189?v=4"
+    }
+  }
+}
+```
+
 ```
 mutation post($input: PostPhotoInput!) {
   postPhoto(input: $input) {
@@ -287,6 +299,21 @@ mutation post($input: PostPhotoInput!) {
     postedBy {
       name
       avatar
+    }
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "postPhoto": {
+      "id": "5ea3dfed0952021caa5d01d5",
+      "url": "/img/photos/5ea3dfed0952021caa5d01d5.jpg",
+      "postedBy": {
+        "name": "dycoon",
+        "avatar": "https://avatars3.githubusercontent.com/u/553189?v=4"
+      }
     }
   }
 }
@@ -302,6 +329,52 @@ query listPhotos {
       avatar
     }
     createdAt
+  }
+}
+```
+
+```
+{
+  "data": {
+    "allPhotos": [
+      {
+        "name": "test name",
+        "postedBy": {
+          "githubLogin": "dycoon",
+          "name": "dycoon",
+          "avatar": "https://avatars3.githubusercontent.com/u/553189?v=4"
+        },
+        "createdAt": "2020-04-25T06:42:18.720Z"
+      }
+    ]
+  }
+}
+```
+
+### fake user mutation
+
+```
+mutation {
+  addFakeUsers(count: 3) {
+    name
+  }
+}
+```
+
+```
+{
+  "data": {
+    "addFakeUsers": [
+      {
+        "name": "Rachel Dufour"
+      },
+      {
+        "name": "Océane Arnaud"
+      },
+      {
+        "name": "Alicia Laurent"
+      }
+    ]
   }
 }
 ```

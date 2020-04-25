@@ -4,6 +4,7 @@ import expressPlayground from 'graphql-playground-middleware-express';
 import { typeDefs } from './typeDefs';
 import { MongoClient } from 'mongodb';
 import { githubAuth } from './github';
+import fetch from 'cross-fetch';
 const express = require('express');
 const dotenv = require('dotenv');
 dotenv.config();
@@ -77,6 +78,20 @@ const resolvers = {
       return newPhoto;
     },
     githubAuth,
+    addFakeUsers: async (parent, { count }, { db }) => {
+      const randomUserApi = `https://randomuser.me/api/?results=${count}`;
+      const { results } = await fetch(randomUserApi).then(res => res.json());
+      const users = results.map(r => ({
+        githubLogin: r.login.username,
+        name: `${r.name.first} ${r.name.last}`,
+        avatar: r.picture.thumbnail,
+        githubToken: r.login.sha1,
+      }));
+
+      await db.collection(`users`).insert(users);
+
+      return users;
+    }
   },
   Photo: {
     id: parent => parent.id || parent._id,
