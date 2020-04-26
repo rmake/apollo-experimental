@@ -223,6 +223,12 @@ query listPhotos {
 
 ### Github 認可
 
+ユーザーの認証と認可の実現方法の例として信頼されておりユーザーの心理的障壁が少ないであろう Github 認可を取り上げている。
+
+#### Github OAuth のセットアップ
+
+Github のサイトで Github 認可を設定する。
+
 ### githubAuth mutation
 
 ```
