@@ -33,7 +33,14 @@ const query = gql`
   }
 `;
 
+console.log("cache", client.extract());
+
 client
   .query({ query })
   .then(({ data }: { data: any }) => console.log("data", data))
+  .catch(console.error);
+
+client
+  .query({ query })
+  .then(({ data }: { data: any }) => console.log("cache", client.extract()))
   .catch(console.error);
