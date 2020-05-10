@@ -4,15 +4,27 @@ import { ROOT_QUERY } from "./App";
 
 const Users = () => (
   <Query query={ROOT_QUERY}>
-    {({ data, loading }: { data: any; loading: boolean }) => (
-      <p>
+    {({
+      data,
+      loading,
+      refetch,
+    }: {
+      data: any;
+      loading: boolean;
+      refetch: () => void;
+    }) => (
+      <div>
         Users are loading:{" "}
         {loading ? (
           <p>Loading users...</p>
         ) : (
-          <UserList count={data.totalUsers} users={data.allUsers} />
+          <UserList
+            count={data.totalUsers}
+            users={data.allUsers}
+            refetchUsers={refetch}
+          />
         )}
-      </p>
+      </div>
     )}
   </Query>
 );
@@ -24,9 +36,18 @@ const UserListItem = ({ name, avatar }: { name: string; avatar: string }) => (
   </li>
 );
 
-const UserList = ({ count, users }: { count: number; users: any[] }) => (
+const UserList = ({
+  count,
+  users,
+  refetchUsers,
+}: {
+  count: number;
+  users: any[];
+  refetchUsers: () => void;
+}) => (
   <div>
     <p>{count} Users</p>
+    <button onClick={() => refetchUsers}>Refetch Users</button>
     <ul>
       {users.map((user: any) => (
         <UserListItem
