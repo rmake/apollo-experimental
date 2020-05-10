@@ -7,7 +7,7 @@ import { fetch } from "cross-fetch";
 import { ApolloClient } from "apollo-client";
 import { ApolloLink } from "apollo-link";
 import { HttpLink } from "apollo-link-http";
-import { gql, InMemoryCache } from "apollo-boost";
+import { InMemoryCache } from "apollo-boost";
 import { onError } from "apollo-link-error";
 import { ApolloProvider } from "react-apollo";
 

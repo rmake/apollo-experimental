@@ -18,11 +18,13 @@
     "apollo-link-http": "^1.5.17",
     "apollo-link-state": "^0.4.2",
     "cross-fetch": "^3.0.4",
+    "graphql": "^15.0.0",
     "graphql-tag": "^2.10.3",
     "react": "^16.13.1",
     "react-apollo": "^3.1.5",
     "react-dom": "^16.13.1",
-    "react-scripts": "3.4.1"
+    "react-scripts": "3.4.1",
+    "typescript": "^3.8.3"
   },
   "scripts": {
     "start": "react-scripts start",
