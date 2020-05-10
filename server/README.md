@@ -1,3 +1,10 @@
+## useage
+
+```
+yarn install
+yarn run start
+```
+
 ## examples
 
 ```
