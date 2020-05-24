@@ -8,17 +8,18 @@ export const ROOT_QUERY = gql`
   query allUsers {
     totalUsers
     allUsers {
-      githubLogin
-      name
-      avatar
+      ...userInfo
+    }
+    me {
+      ...userInfo
     }
   }
 
-  #fragment userInfo on User {
-  #  githubLogin
-  #  name
-  #  avatar
-  #}
+  fragment userInfo on User {
+    githubLogin
+    name
+    avatar
+  }
 `;
 
 const App = () => (
