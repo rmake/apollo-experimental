@@ -1,6 +1,8 @@
 import React from "react";
 import { gql } from "apollo-boost";
 import Users from "./Users";
+import { BrowserRouter } from "react-router-dom";
+import AuthorizedUser from "./AuthorizedUser";
 
 export const ROOT_QUERY = gql`
   query allUsers {
@@ -11,8 +13,21 @@ export const ROOT_QUERY = gql`
       avatar
     }
   }
+
+  #fragment userInfo on User {
+  #  githubLogin
+  #  name
+  #  avatar
+  #}
 `;
 
-const App = () => <Users />;
+const App = () => (
+  <BrowserRouter>
+    <div>
+      <AuthorizedUser />
+      <Users />
+    </div>
+  </BrowserRouter>
+);
 
 export default App;
