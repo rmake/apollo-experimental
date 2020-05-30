@@ -4,7 +4,11 @@ import { gql } from "apollo-boost";
 import { ROOT_QUERY } from "./App";
 
 const Users = () => (
-  <Query query={ROOT_QUERY} pollInterval={10000} fetchPolicy="cache-only">
+  <Query
+    query={ROOT_QUERY}
+    pollInterval={10000}
+    fetchPolicy="cache-and-network"
+  >
     {({
       data,
       loading,
