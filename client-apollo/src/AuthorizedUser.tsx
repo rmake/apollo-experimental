@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { useHistory } from "react-router-dom";
 import gql from "graphql-tag";
-import { Query, Mutation } from "react-apollo";
+import { Query, Mutation, useApolloClient } from "react-apollo";
 import { ROOT_QUERY } from "./App";
 
 const CurrentUser = ({
@@ -84,6 +84,8 @@ const AuthorizedUser: React.FC<{}> = () => {
     [history]
   );
 
+  const client = useApolloClient();
+
   return (
     <Mutation
       mutation={GITHUB_AUTH_MUTATION}
@@ -96,7 +98,14 @@ const AuthorizedUser: React.FC<{}> = () => {
           <Me
             signningIn={signingIn}
             requestCode={requestCode}
-            logout={() => localStorage.removeItem("token")}
+            logout={() => {
+              localStorage.removeItem("token");
+              const data = client.readQuery({ query: ROOT_QUERY });
+              client.writeQuery({
+                query: ROOT_QUERY,
+                data: { ...data, me: null },
+              });
+            }}
           />
         );
       }}
