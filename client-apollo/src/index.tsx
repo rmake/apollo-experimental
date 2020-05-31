@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./index.css";
-import App from "./App";
+import App, { ROOT_QUERY } from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { fetch } from "cross-fetch";
 import { ApolloClient } from "apollo-client";
@@ -60,6 +60,10 @@ const asyncCall = async () => {
     </ApolloProvider>,
     document.getElementById("root")
   );
+
+  const { totalUsers, allUsers, me } =
+    cache.readQuery({ query: ROOT_QUERY }) || {};
+  console.log(totalUsers, allUsers, me);
 
   // If you want your app to work offline and load faster, you can change
   // unregister() to register() below. Note this comes with some pitfalls.
