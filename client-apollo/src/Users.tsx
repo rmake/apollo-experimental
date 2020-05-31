@@ -47,6 +47,21 @@ const UserListItem = ({ name, avatar }: { name: string; avatar: string }) => (
   </li>
 );
 
+const updateUserCache = (
+  cache: any,
+  { data: { addFakeUsers } }: { data?: any }
+) => {
+  const data = cache.readQuery({ query: ROOT_QUERY });
+  cache.writeQuery({
+    query: ROOT_QUERY,
+    data: {
+      ...data,
+      totalUsers: data.totalUsers += addFakeUsers.length,
+      allUsers: [...data.allUsers, ...addFakeUsers],
+    },
+  });
+};
+
 const UserList = ({
   count,
   users,
@@ -62,7 +77,7 @@ const UserList = ({
     <Mutation
       mutation={ADD_FAKE_USERS_MUTATION}
       variables={{ count: 1 }}
-      refetchQueries={[{ query: ROOT_QUERY }]}
+      update={updateUserCache}
     >
       {(addFakeUsers: () => void) => (
         <button onClick={addFakeUsers}>Add Fake Users</button>
