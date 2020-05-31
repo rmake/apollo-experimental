@@ -56,7 +56,12 @@ const resolvers = {
       db.collection("photos").find().toArray(),
     totalUsers: (parent, args, { db }) =>
       db.collection("users").estimatedDocumentCount(),
-    allUsers: (parent, args, { db }) => db.collection("users").find().toArray(),
+    allUsers: (parent, args, { db, currentUser }) => {
+      if (!currentUser) {
+        return [];
+      }
+      return db.collection("users").find().toArray();
+    },
     me: (parent, args, { currentUser }) => currentUser,
   },
   Mutation: {
