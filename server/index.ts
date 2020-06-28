@@ -1,4 +1,4 @@
-import { ApolloServer } from "apollo-server-express";
+import { ApolloServer, PubSub } from "apollo-server-express";
 import { GraphQLScalarType, Kind } from "graphql";
 import expressPlayground from "graphql-playground-middleware-express";
 import { typeDefs } from "./typeDefs";
@@ -158,13 +158,16 @@ const start = async () => {
   });
   const db = client.db();
 
+  const pubsub = new PubSub();
   const server = new ApolloServer({
     typeDefs,
     resolvers,
-    context: async ({ req }) => {
-      const githubToken = req.headers.authorization;
+    context: async ({ req, connection }) => {
+      const githubToken = req
+        ? req.headers.authorization
+        : connection.context.Authorization;
       const currentUser = await db.collection("users").findOne({ githubToken });
-      return { db, currentUser };
+      return { db, currentUser, pubsub };
     },
   });
 
