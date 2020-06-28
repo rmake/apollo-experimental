@@ -5,6 +5,8 @@ import { typeDefs } from "./typeDefs";
 import { MongoClient } from "mongodb";
 import { githubAuth } from "./github";
 import fetch from "cross-fetch";
+import { createServer } from "http";
+
 const express = require("express");
 const dotenv = require("dotenv");
 dotenv.config();
@@ -168,10 +170,10 @@ const start = async () => {
   );
   app.get("/playground", expressPlayground({ endpoint: "/graphql" }));
 
-  app.listen({ port: 4000 }, () =>
-    console.log(
-      `GraqhQL Server running @ http://localhost:4000${server.graphqlPath}`
-    )
+  const httpServer = createServer(app);
+  server.installSubscriptionHandlers(httpServer);
+  httpServer.listen({ port: 4000 }, () =>
+    console.log(`GraphQL Server running at localhost:4000${server.graphqlPath}`)
   );
 };
 
