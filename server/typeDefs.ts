@@ -58,6 +58,7 @@ export const typeDefs = gql`
 
   type Subscription {
     newPhoto: Photo!
+    newUser: User!
   }
 
   schema {

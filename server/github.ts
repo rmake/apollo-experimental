@@ -30,7 +30,11 @@ const authrizeWithGithub = async (credentials) => {
   return { ...githubUser, access_token };
 };
 
-export const githubAuth = async (parent, { code }, { db }: { db: Db }) => {
+export const githubAuth = async (
+  parent,
+  { code },
+  { db, pubsub }: { db: Db; pubsub: any }
+) => {
   const {
     message,
     access_token,
@@ -57,6 +61,8 @@ export const githubAuth = async (parent, { code }, { db }: { db: Db }) => {
   } = await db
     .collection("users")
     .replaceOne({ githubLogin: login }, latestUserInfo, { upsert: true });
+
+  pubsub.publish("user-added", { newUser: user });
 
   return { user, token: access_token };
 };

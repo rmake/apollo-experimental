@@ -86,7 +86,7 @@ const resolvers = {
       return newPhoto;
     },
     githubAuth,
-    addFakeUsers: async (parent, { count }, { db }) => {
+    addFakeUsers: async (parent, { count }, { db, pubsub }) => {
       const randomUserApi = `https://randomuser.me/api/?results=${count}`;
       const { results } = await fetch(randomUserApi).then((res) => res.json());
       const users = results.map((r) => ({
@@ -98,14 +98,20 @@ const resolvers = {
 
       await db.collection(`users`).insertMany(users);
 
+      users.forEach((user) => {
+        pubsub.publish("user-added", { newUser: user });
+      });
+
       return users;
     },
-    fakeUserAuth: async (parent, { githubLogin }, { db }) => {
+    fakeUserAuth: async (parent, { githubLogin }, { db, pubsub }) => {
       const user = await db.collection("users").findOne({ githubLogin });
 
       if (!user) {
         throw new Error(`Cannot find user with githubLogin '${githubLogin}'`);
       }
+
+      pubsub.publish("user-added", { newUser: user });
 
       return {
         token: user.githubToken,
@@ -117,6 +123,10 @@ const resolvers = {
     newPhoto: {
       subscribe: (parent, args, { pubsub }) =>
         pubsub.asyncIterator("photo-added"),
+    },
+    newUser: {
+      subscribe: (parent, args, { pubsub }) =>
+        pubsub.asyncIterator("user-added"),
     },
   },
   Photo: {
