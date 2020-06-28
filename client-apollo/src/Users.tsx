@@ -1,5 +1,10 @@
 import React from "react";
-import { Query, Mutation } from "react-apollo";
+import {
+  Query,
+  Mutation,
+  Subscription,
+  SubscriptionResult,
+} from "react-apollo";
 import { gql } from "apollo-boost";
 import { ROOT_QUERY } from "./App";
 
@@ -47,6 +52,16 @@ const UserListItem = ({ name, avatar }: { name: string; avatar: string }) => (
   </li>
 );
 
+const LISTEN_FOR_USERS = gql`
+  subscription {
+    newUser {
+      githubLogin
+      name
+      avatar
+    }
+  }
+`;
+
 const updateUserCache = (
   cache: any,
   { data: { addFakeUsers } }: { data?: any }
@@ -74,6 +89,18 @@ const UserList = ({
   <div>
     <p>{count} Users</p>
     <button onClick={() => refetchUsers()}>Refetch Users</button>
+    <Subscription subscription={LISTEN_FOR_USERS}>
+      {({ data, loading }: SubscriptionResult<any>) =>
+        loading ? (
+          <p>loading a new user...</p>
+        ) : (
+          <div>
+            <img src={data?.newUser?.avatar} alt="" />
+            <h2>{data?.newUser?.name}</h2>
+          </div>
+        )
+      }
+    </Subscription>
     <Mutation
       mutation={ADD_FAKE_USERS_MUTATION}
       variables={{ count: 1 }}
