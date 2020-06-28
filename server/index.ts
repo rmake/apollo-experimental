@@ -114,7 +114,10 @@ const resolvers = {
     },
   },
   Subscription: {
-    newPhoto: (parent, args, { pubsub }) => pubsub.asyncIterator("photo-added"),
+    newPhoto: {
+      subscribe: (parent, args, { pubsub }) =>
+        pubsub.asyncIterator("photo-added"),
+    },
   },
   Photo: {
     id: (parent) => parent.id || parent._id,
@@ -176,13 +179,26 @@ const start = async () => {
   app.get(".", (request, response) =>
     response.end("Welcome to the PhotoShare API")
   );
-  app.get("/playground", expressPlayground({ endpoint: "/graphql" }));
+  app.get(
+    "/playground",
+    expressPlayground({
+      endpoint: "/graphql",
+      subscriptionEndpoint: "ws://localhost:4000/graphql",
+    })
+  );
 
   const httpServer = createServer(app);
   server.installSubscriptionHandlers(httpServer);
-  httpServer.listen({ port: 4000 }, () =>
-    console.log(`GraphQL Server running at localhost:4000${server.graphqlPath}`)
-  );
+  httpServer.listen({ port: 4000 }, () => {
+    console.log(
+      `GraphQL Server running at localhost:4000${server.graphqlPath}`
+    );
+    console.log(
+      `🚀 Subscriptions ready at ws://localhost:${4000}${
+        server.subscriptionsPath
+      }`
+    );
+  });
 };
 
 start();

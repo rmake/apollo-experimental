@@ -63,5 +63,6 @@ export const typeDefs = gql`
   schema {
     query: Query
     mutation: Mutation
+    subscription: Subscription
   }
 `;
