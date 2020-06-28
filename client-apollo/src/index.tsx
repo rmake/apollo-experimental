@@ -5,7 +5,7 @@ import App from "./App";
 import * as serviceWorker from "./serviceWorker";
 import { fetch } from "cross-fetch";
 import { ApolloClient } from "apollo-client";
-import { ApolloLink } from "apollo-link";
+import { ApolloLink, split } from "apollo-link";
 import { HttpLink } from "apollo-link-http";
 import { InMemoryCache, NormalizedCacheObject } from "apollo-boost";
 import { onError } from "apollo-link-error";
@@ -13,6 +13,8 @@ import { ApolloProvider } from "react-apollo";
 import { setContext } from "apollo-link-context";
 import { persistCache } from "apollo-cache-persist";
 import { PersistentStorage, PersistedData } from "apollo-cache-persist/types";
+import { WebSocketLink } from "apollo-link-ws";
+import { getMainDefinition } from "apollo-utilities";
 
 const cache = new InMemoryCache();
 
@@ -36,6 +38,25 @@ const asyncCall = async () => {
     },
   }));
 
+  const wsLink = new WebSocketLink({
+    uri: "ws://localhost:4000/graphql",
+    options: {
+      reconnect: true,
+    },
+  });
+
+  const link = split(
+    ({ query }) => {
+      const definition = getMainDefinition(query);
+      return (
+        definition.kind === "OperationDefinition" &&
+        definition.operation === "subscription"
+      );
+    },
+    wsLink,
+    httpLink
+  );
+
   const client = new ApolloClient({
     link: ApolloLink.from([
       onError(({ graphQLErrors, networkError }) => {
@@ -48,7 +69,7 @@ const asyncCall = async () => {
           if (networkError) console.log(`[Network error]: ${networkError}`);
         }
       }),
-      authLink.concat(httpLink),
+      authLink.concat(link),
     ]),
     cache,
   });
