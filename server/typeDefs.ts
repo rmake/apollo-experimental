@@ -56,6 +56,10 @@ export const typeDefs = gql`
     fakeUserAuth(githubLogin: ID!): AuthPayload!
   }
 
+  type Subscription {
+    newPhoto: Photo!
+  }
+
   schema {
     query: Query
     mutation: Mutation
