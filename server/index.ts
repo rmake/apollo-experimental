@@ -57,8 +57,12 @@ const resolvers = {
   Query: {
     totalPhotos: (parent, args, { db }) =>
       db.collection("photos").estimatedDocumentCount(),
-    allPhotos: (parent, args, { db }) =>
-      db.collection("photos").find().toArray(),
+    allPhotos: (parent, args, { db }) => {
+      if (args.first > 100) {
+        throw new Error(`Only 100 photos can be requested at a time`);
+      }
+      db.collection("photos").find().toArray();
+    },
     totalUsers: (parent, args, { db }) =>
       db.collection("users").estimatedDocumentCount(),
     allUsers: (parent, args, { db, currentUser }) => {
@@ -195,7 +199,7 @@ const start = async () => {
         ? req.headers.authorization
         : connection.context.Authorization;
       const currentUser = await db.collection("users").findOne({ githubToken });
-      return { db, currentUser, pubsub };
+      return { db, currentUser, pubsub, timestamp: performance.now };
     },
   });
 
@@ -219,6 +223,7 @@ const start = async () => {
 
   const httpServer = createServer(app);
   server.installSubscriptionHandlers(httpServer);
+  httpServer.timeout = 5000;
   httpServer.listen({ port: 4000 }, () => {
     console.log(
       `GraphQL Server running at localhost:4000${server.graphqlPath}`
