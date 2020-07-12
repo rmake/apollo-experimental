@@ -9,6 +9,7 @@ import { createServer } from "http";
 import { GraphQLUpload } from "apollo-upload-server";
 import { uploadStream } from "./lib";
 import * as path from "path";
+import * as depthLimit from "graphql-depth-limit";
 
 const express = require("express");
 const dotenv = require("dotenv");
@@ -194,6 +195,7 @@ const start = async () => {
   const server = new ApolloServer({
     typeDefs,
     resolvers,
+    validationRules: [depthLimit(5)],
     context: async ({ req, connection }) => {
       const githubToken = req
         ? req.headers.authorization
