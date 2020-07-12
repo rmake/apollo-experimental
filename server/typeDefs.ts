@@ -47,6 +47,7 @@ export const typeDefs = gql`
     name: String!
     category: PhotoCategory = PORTRAIT
     description: String
+    file: Upload!
   }
 
   type Mutation {

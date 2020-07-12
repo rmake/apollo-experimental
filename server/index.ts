@@ -6,6 +6,9 @@ import { MongoClient } from "mongodb";
 import { githubAuth } from "./github";
 import fetch from "cross-fetch";
 import { createServer } from "http";
+import { GraphQLUpload } from "apollo-upload-server";
+import { uploadStream } from "./lib";
+import * as path from "path";
 
 const express = require("express");
 const dotenv = require("dotenv");
@@ -80,6 +83,16 @@ const resolvers = {
 
       const { id } = await db.collection(`photos`).insertOne(newPhoto);
       newPhoto.id = id;
+
+      const toPath = path.join(
+        __dirname,
+        "assets",
+        "photos",
+        `${newPhoto.id}.jpg`
+      );
+
+      const stream = await args.input.file;
+      await uploadStream(stream, toPath);
 
       pubsub.publish("photo-added", { newPhoto });
 
@@ -159,6 +172,7 @@ const resolvers = {
       return null;
     },
   }),
+  Upload: GraphQLUpload,
 };
 
 const start = async () => {
@@ -185,6 +199,11 @@ const start = async () => {
   });
 
   server.applyMiddleware({ app });
+
+  app.use(
+    "./img/photos",
+    express.static(path.join(__dirname, "assets", "photos"))
+  );
 
   app.get(".", (request, response) =>
     response.end("Welcome to the PhotoShare API")
