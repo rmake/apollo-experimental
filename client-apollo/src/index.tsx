@@ -15,6 +15,7 @@ import { persistCache } from "apollo-cache-persist";
 import { PersistentStorage, PersistedData } from "apollo-cache-persist/types";
 import { WebSocketLink } from "apollo-link-ws";
 import { getMainDefinition } from "apollo-utilities";
+import { createUploadLink } from "apollo-upload-client";
 
 const cache = new InMemoryCache();
 
@@ -26,7 +27,7 @@ const asyncCall = async () => {
     >,
   });
 
-  const httpLink = new HttpLink({
+  const httpLink = createUploadLink({
     uri: "http://localhost:4000/graphql",
     fetch: fetch,
     credentials: "same-origin",

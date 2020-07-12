@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
-import { useHistory } from "react-router-dom";
+import { useHistory, NavLink } from "react-router-dom";
 import gql from "graphql-tag";
 import { Query, Mutation, useApolloClient } from "react-apollo";
 import { ROOT_QUERY } from "./App";
@@ -17,6 +17,7 @@ const CurrentUser = ({
     <img src={avatar} width={48} height={48} alt="" />
     <h1>{name}</h1>
     <button onClick={logout}>logout</button>
+    <NavLink to="/newPhoto">Post Photo</NavLink>
   </div>
 );
 
