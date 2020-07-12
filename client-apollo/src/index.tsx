@@ -6,7 +6,6 @@ import * as serviceWorker from "./serviceWorker";
 import { fetch } from "cross-fetch";
 import { ApolloClient } from "apollo-client";
 import { ApolloLink, split } from "apollo-link";
-import { HttpLink } from "apollo-link-http";
 import { InMemoryCache, NormalizedCacheObject } from "apollo-boost";
 import { onError } from "apollo-link-error";
 import { ApolloProvider } from "react-apollo";
@@ -27,7 +26,7 @@ const asyncCall = async () => {
     >,
   });
 
-  const httpLink = createUploadLink({
+  const uploadLink = createUploadLink({
     uri: "http://localhost:4000/graphql",
     fetch: fetch,
     credentials: "same-origin",
@@ -55,7 +54,7 @@ const asyncCall = async () => {
       );
     },
     wsLink,
-    httpLink
+    uploadLink
   );
 
   const client = new ApolloClient({

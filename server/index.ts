@@ -88,10 +88,11 @@ const resolvers = {
         __dirname,
         "assets",
         "photos",
-        `${newPhoto.id}.jpg`
+        `${newPhoto._id}.jpg`
       );
 
-      const stream = await args.input.file;
+      const { createReadStream } = await args.input.file;
+      const stream = createReadStream();
       await uploadStream(stream, toPath);
 
       pubsub.publish("photo-added", { newPhoto });
@@ -144,7 +145,7 @@ const resolvers = {
   },
   Photo: {
     id: (parent) => parent.id || parent._id,
-    url: (parent) => `/img/photos/${parent._id}.jpg`,
+    url: (parent) => `http://localhost:4000/img/photos/${parent._id}.jpg`,
     postedBy: (parent, args, { db }) =>
       db.collection("users").findOne({ githubLogin: parent.userID }),
     taggedUsers: (parent) =>
@@ -201,7 +202,7 @@ const start = async () => {
   server.applyMiddleware({ app });
 
   app.use(
-    "./img/photos",
+    "/img/photos",
     express.static(path.join(__dirname, "assets", "photos"))
   );
 

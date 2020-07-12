@@ -1,7 +1,10 @@
-import React, { useState, useCallback } from "react";
+import React, { useState } from "react";
 import { useHistory } from "react-router-dom";
+import gql from "graphql-tag";
+import { Mutation } from "react-apollo";
+import { ROOT_QUERY } from "./App";
 
-const POS_PHOTO_MUTATION = gql`
+const POST_PHOTO_MUTATION = gql`
   mutation postPhoto($input: PostPhotoInput!) {
     postPhoto(input: $input) {
       id
@@ -18,9 +21,24 @@ const PostPhotos = () => {
   const [file, setFile] = useState<File | string>("");
   const history = useHistory();
 
-  const postPhoto = () => {
-    console.log("todo: post photo");
-    console.log({ name, description, category, file });
+  const postPhoto = async (
+    mutation: ({ variables }: { variables: any }) => void
+  ) => {
+    await mutation({
+      variables: {
+        input: { name, description, category, file },
+      },
+    });
+    history.replace("/");
+  };
+
+  const updatePhotos = (
+    cache: any,
+    { data: { postPhoto } }: { data?: any }
+  ) => {
+    const data = cache.readQuery({ query: ROOT_QUERY });
+    data.allPhotos = [postPhoto, ...data.allPhotos];
+    cache.writeQuery({ query: ROOT_QUERY, data });
   };
 
   return (
@@ -68,7 +86,11 @@ const PostPhotos = () => {
       />
 
       <div style={{ margin: "10px" }}>
-        <button onClick={() => postPhoto()}>Post Photo</button>
+        <Mutation mutation={POST_PHOTO_MUTATION} update={updatePhotos}>
+          {(mutation: () => void) => (
+            <button onClick={() => postPhoto(mutation)}>Post Photo</button>
+          )}
+        </Mutation>
         <button onClick={() => history.goBack()}>Cancel</button>
       </div>
     </form>

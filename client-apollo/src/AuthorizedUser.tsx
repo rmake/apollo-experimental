@@ -3,6 +3,7 @@ import { useHistory, NavLink } from "react-router-dom";
 import gql from "graphql-tag";
 import { Query, Mutation, useApolloClient } from "react-apollo";
 import { ROOT_QUERY } from "./App";
+import Photos from "./Photos";
 
 const CurrentUser = ({
   name,
@@ -18,6 +19,7 @@ const CurrentUser = ({
     <h1>{name}</h1>
     <button onClick={logout}>logout</button>
     <NavLink to="/newPhoto">Post Photo</NavLink>
+    <Photos />
   </div>
 );
 
