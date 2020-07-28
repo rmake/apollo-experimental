@@ -6,10 +6,10 @@ const mocks = {
   Query: () => ({
     totalPhotos: () => 42,
     allPhotos: () => new MockList([5, 10]),
-    Photo: () => ({
-      name: "sample photo",
-      description: null,
-    }),
+  }),
+  Photo: () => ({
+    name: "sample photo",
+    description: null,
   }),
 };
 const server = new ApolloServer({ typeDefs, resolvers, mocks });
