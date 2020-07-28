@@ -4,6 +4,7 @@ import gql from "graphql-tag";
 import { Query, Mutation, useApolloClient } from "react-apollo";
 import { ROOT_QUERY } from "./App";
 import Photos from "./Photos";
+import Counter from "./Counter";
 
 const CurrentUser = ({
   name,
@@ -90,29 +91,32 @@ const AuthorizedUser: React.FC<{}> = () => {
   const client = useApolloClient();
 
   return (
-    <Mutation
-      mutation={GITHUB_AUTH_MUTATION}
-      update={authorizationComplete}
-      refetchQueries={[{ query: ROOT_QUERY }]}
-    >
-      {(mutation: MutationCallback) => {
-        githubAuthMutation.current = mutation;
-        return (
-          <Me
-            signningIn={signingIn}
-            requestCode={requestCode}
-            logout={() => {
-              localStorage.removeItem("token");
-              const data = client.readQuery({ query: ROOT_QUERY });
-              client.writeQuery({
-                query: ROOT_QUERY,
-                data: { ...data, me: null },
-              });
-            }}
-          />
-        );
-      }}
-    </Mutation>
+    <>
+      <Counter />
+      <Mutation
+        mutation={GITHUB_AUTH_MUTATION}
+        update={authorizationComplete}
+        refetchQueries={[{ query: ROOT_QUERY }]}
+      >
+        {(mutation: MutationCallback) => {
+          githubAuthMutation.current = mutation;
+          return (
+            <Me
+              signningIn={signingIn}
+              requestCode={requestCode}
+              logout={() => {
+                localStorage.removeItem("token");
+                const data = client.readQuery({ query: ROOT_QUERY });
+                client.writeQuery({
+                  query: ROOT_QUERY,
+                  data: { ...data, me: null },
+                });
+              }}
+            />
+          );
+        }}
+      </Mutation>
+    </>
   );
 };
 
