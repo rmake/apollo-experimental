@@ -15,6 +15,8 @@ const express = require("express");
 const dotenv = require("dotenv");
 dotenv.config();
 
+const performance = require("perf_hooks").performance;
+
 var _id = 3;
 var users = [
   { githubLogin: "mHattrup", name: "Mike Hattrup" },
@@ -62,7 +64,7 @@ const resolvers = {
       if (args.first > 100) {
         throw new Error(`Only 100 photos can be requested at a time`);
       }
-      db.collection("photos").find().toArray();
+      return db.collection("photos").find().toArray();
     },
     totalUsers: (parent, args, { db }) =>
       db.collection("users").estimatedDocumentCount(),
