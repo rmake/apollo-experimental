@@ -5,7 +5,7 @@ class UserAPI extends DataSource {
   context: any;
   store: any;
 
-  constructor({ store }) {
+  constructor({ store }: { store: any }) {
     super();
     this.store = store;
   }
@@ -16,7 +16,7 @@ class UserAPI extends DataSource {
    * like caches and context. We'll assign this.context to the request context
    * here, so we can know about the user making requests
    */
-  initialize(config) {
+  initialize(config: any) {
     this.context = config.context;
   }
 
@@ -34,7 +34,7 @@ class UserAPI extends DataSource {
     return users && users[0] ? users[0] : null;
   }
 
-  async bookTrips({ launchIds }) {
+  async bookTrips({ launchIds }: { launchIds: any }) {
     const userId = this.context.user.id;
     if (!userId) return;
 
@@ -50,7 +50,7 @@ class UserAPI extends DataSource {
     return results;
   }
 
-  async bookTrip({ launchId }) {
+  async bookTrip({ launchId }: { launchId: any }) {
     const userId = this.context.user.id;
     const res = await this.store.trips.findOrCreate({
       where: { userId, launchId },
@@ -58,7 +58,7 @@ class UserAPI extends DataSource {
     return res && res.length ? res[0].get() : false;
   }
 
-  async cancelTrip({ launchId }) {
+  async cancelTrip({ launchId }: { launchId: any }) {
     const userId = this.context.user.id;
     return !!this.store.trips.destroy({ where: { userId, launchId } });
   }
@@ -69,11 +69,11 @@ class UserAPI extends DataSource {
       where: { userId },
     });
     return found && found.length
-      ? found.map((l) => l.dataValues.launchId).filter((l) => !!l)
+      ? found.map((l: any) => l.dataValues.launchId).filter((l: any) => !!l)
       : [];
   }
 
-  async isBookedOnLaunch({ launchId }) {
+  async isBookedOnLaunch({ launchId }: { launchId: any }) {
     if (!this.context || !this.context.user) return false;
     const userId = this.context.user.id;
     const found = await this.store.trips.findAll({
