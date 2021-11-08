@@ -7,7 +7,7 @@
     "start": "ts-node-dev mock.ts"
   },
   "dependencies": {
-    "apollo-server": "^2.15.0",
+    "apollo-server": "^2.25.3",
     "ts-node-dev": "^1.0.0-pre.49",
     "typescript": "^3.9.5"
   }
